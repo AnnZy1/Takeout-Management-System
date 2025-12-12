@@ -291,8 +291,8 @@ logging:
 
 ## 联系方式
 
-- 项目地址：[https://github.com/yourusername/deliver-management](https://github.com/yourusername/deliver-management)
-- 问题反馈：[GitHub Issues](https://github.com/yourusername/deliver-management/issues)
+- 项目地址：[https://github.com/AnnZy1/delma](https://github.com/AnnZy1/delma)
+- 问题反馈：[GitHub Issues](https://github.com/AnnZy1/delma/issues)
 
 ## 更新日志
 
