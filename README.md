@@ -21,8 +21,7 @@ flowchart TB
     
     subgraph 数据层
         F --> G[MySQL数据库]
-        F --> H[Redis缓存]
-        F --> I[文件存储]
+        F --> H[文件存储]
     end
 ```
 
@@ -68,7 +67,6 @@ flowchart TB
 | Spring Security | 6.1.0 | 安全认证 |
 | MyBatis Plus | 3.5.3.1 | ORM框架 |
 | MySQL | 8.0 | 关系型数据库 |
-| Redis | 7.0+ | 缓存数据库 |
 | JWT | 0.11.5 | 身份认证 |
 | Lombok | 1.18.26 | 简化代码 |
 | Knife4j | 4.3.0 | API文档 |
@@ -121,7 +119,6 @@ deliverManagement/
 - JDK 17+
 - MySQL 8.0+
 - Node.js 16+
-- Redis 7.0+（可选，用于缓存）
 
 ### 数据库配置
 
@@ -142,18 +139,17 @@ deliverManagement/
 ### 后端启动
 
 1. 修改配置文件
-   - 编辑 `src/main/resources/application.yml`
-   - 配置数据库连接信息
-   - 配置Redis信息（如果使用）
+    - 编辑 `src/main/resources/application.yml`
+    - 配置数据库连接信息
 
 2. 启动后端服务
-   ```bash
-   # 方式1：直接运行启动类
-   # 运行 DeliverManagementApplication.java
-   
-   # 方式2：Maven命令
-   mvn spring-boot:run
-   ```
+    ```bash
+    # 方式1：直接运行启动类
+    # 运行 DeliverManagementApplication.java
+    
+    # 方式2：Maven命令
+    mvn spring-boot:run
+    ```
 
 3. 访问API文档
    - 地址：http://localhost:8080/doc.html
@@ -291,8 +287,8 @@ logging:
 
 ## 联系方式
 
-- 项目地址：[https://github.com/AnnZy1/delma](https://github.com/AnnZy1/delma)
-- 问题反馈：[GitHub Issues](https://github.com/AnnZy1/delma/issues)
+- 项目地址：[https://github.com/yourusername/deliver-management](https://github.com/yourusername/deliver-management)
+- 问题反馈：[GitHub Issues](https://github.com/yourusername/deliver-management/issues)
 
 ## 更新日志
 
