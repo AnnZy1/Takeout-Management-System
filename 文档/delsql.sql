@@ -1,8 +1,9 @@
 -- ============================================
--- 外卖管理系统数据库初始化脚本
+-- 外卖管理系统数据库初始化脚本 (delsql.sql)
 -- 数据库版本: MySQL 8.0+
 -- 字符集: utf8mb4
 -- 排序规则: utf8mb4_unicode_ci
+-- 说明：合并了 init.sql 和 test.sql 的内容
 -- ============================================
 
 -- 创建数据库
@@ -24,8 +25,8 @@ CREATE TABLE `branch` (
     `is_deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '软删除标识：1-已删 0-未删',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-    `create_user` BIGINT NOT NULL COMMENT '创建人ID',
-    `update_user` BIGINT NOT NULL COMMENT '最后修改人ID',
+    `create_user` BIGINT NOT NULL DEFAULT 1 COMMENT '创建人ID',
+    `update_user` BIGINT NOT NULL DEFAULT 1 COMMENT '最后修改人ID',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_branch_name` (`name`),
     KEY `idx_branch_status` (`status`),
@@ -42,8 +43,8 @@ CREATE TABLE `role` (
     `status` TINYINT NOT NULL DEFAULT 1 COMMENT '角色状态：1-启用 0-禁用',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-    `create_user` BIGINT NOT NULL COMMENT '创建人ID',
-    `update_user` BIGINT NOT NULL COMMENT '最后修改人ID',
+    `create_user` BIGINT NOT NULL DEFAULT 1 COMMENT '创建人ID',
+    `update_user` BIGINT NOT NULL DEFAULT 1 COMMENT '最后修改人ID',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_role_name` (`name`),
     KEY `idx_role_status` (`status`)
@@ -66,8 +67,8 @@ CREATE TABLE `employee` (
     `is_deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '软删除标识：1-已删 0-未删',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-    `create_user` BIGINT NOT NULL COMMENT '创建人ID',
-    `update_user` BIGINT NOT NULL COMMENT '最后修改人ID',
+    `create_user` BIGINT NOT NULL DEFAULT 1 COMMENT '创建人ID',
+    `update_user` BIGINT NOT NULL DEFAULT 1 COMMENT '最后修改人ID',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_emp_username` (`username`),
     UNIQUE KEY `uk_emp_phone` (`phone`),
@@ -121,8 +122,8 @@ CREATE TABLE `category` (
     `is_deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '软删除标识：1-已删 0-未删',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-    `create_user` BIGINT NOT NULL COMMENT '创建人ID',
-    `update_user` BIGINT NOT NULL COMMENT '最后修改人ID',
+    `create_user` BIGINT NOT NULL DEFAULT 1 COMMENT '创建人ID',
+    `update_user` BIGINT NOT NULL DEFAULT 1 COMMENT '最后修改人ID',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_cat_name_type_branch` (`name`, `type`, `branch_id`),
     KEY `idx_cat_type_status_branch` (`type`, `status`, `branch_id`),
@@ -146,8 +147,8 @@ CREATE TABLE `dish` (
     `is_deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '软删除标识：1-已删 0-未删',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-    `create_user` BIGINT NOT NULL COMMENT '创建人ID',
-    `update_user` BIGINT NOT NULL COMMENT '最后修改人ID',
+    `create_user` BIGINT NOT NULL DEFAULT 1 COMMENT '创建人ID',
+    `update_user` BIGINT NOT NULL DEFAULT 1 COMMENT '最后修改人ID',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_dish_name_branch` (`name`, `branch_id`),
     KEY `idx_dish_cat_status_branch` (`category_id`, `status`, `branch_id`),
@@ -186,8 +187,8 @@ CREATE TABLE `setmeal` (
     `is_deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '软删除标识：1-已删 0-未删',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
-    `create_user` BIGINT NOT NULL COMMENT '创建人ID',
-    `update_user` BIGINT NOT NULL COMMENT '最后修改人ID',
+    `create_user` BIGINT NOT NULL DEFAULT 1 COMMENT '创建人ID',
+    `update_user` BIGINT NOT NULL DEFAULT 1 COMMENT '最后修改人ID',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_setmeal_name_branch` (`name`, `branch_id`),
     KEY `idx_setmeal_cat_status_branch` (`category_id`, `status`, `branch_id`),
@@ -343,15 +344,24 @@ CREATE TABLE `dict` (
 INSERT INTO `branch` (`id`, `name`, `address`, `contact_name`, `contact_phone`, `status`, `is_deleted`, `create_user`, `update_user`) 
 VALUES (1, '总店', '系统默认地址', '系统管理员', '13800138000', 1, 0, 1, 1);
 
--- 插入默认角色（管理员）
-INSERT INTO `role` (`id`, `name`, `description`, `status`, `create_user`, `update_user`) 
-VALUES (1, '管理员', '系统最高权限，可操作所有模块', 1, 1, 1);
+-- 插入角色：管理员、店长、收银员、厨师
+INSERT INTO `role` (`id`, `name`, `description`, `status`, `create_user`, `update_user`) VALUES
+(1, '管理员', '系统最高权限，可操作所有模块', 1, 1, 1),
+(2, '店长', '分店管理者', 1, 1, 1),
+(3, '收银员', '前台收银', 1, 1, 1),
+(4, '厨师', '后厨制作', 1, 1, 1);
 
 -- 插入默认管理员账号（用户名：admin，密码：123456，需要BCrypt加密后存储）
 -- 注意：实际使用时需要将密码进行BCrypt加密，这里仅作示例
 -- BCrypt加密后的密码示例：$2a$10$8txnIXzhYL4Pr/X7E1H/2.uGYuRaDWy9yJe.t23Ixl1KDBc16x6o2
 INSERT INTO `employee` (`id`, `username`, `password`, `name`, `phone`, `sex`, `role_id`, `branch_id`, `status`, `is_deleted`, `create_user`, `update_user`) 
 VALUES (1, 'admin', '$2a$10$8txnIXzhYL4Pr/X7E1H/2.uGYuRaDWy9yJe.t23Ixl1KDBc16x6o2', '系统管理员', '13800138000', '男', 1, 1, 1, 0, 1, 1);
+
+-- 插入员工：店长、收银员、厨师
+INSERT INTO `employee` (`username`, `password`, `name`, `phone`, `sex`, `role_id`, `branch_id`, `status`, `is_deleted`, `create_user`, `update_user`) VALUES
+('manager', '$2a$10$8txnIXzhYL4Pr/X7E1H/2.uGYuRaDWy9yJe.t23Ixl1KDBc16x6o2', '张店长', '13900000001', '男', 2, 1, 1, 0, 1, 1),
+('cashier', '$2a$10$8txnIXzhYL4Pr/X7E1H/2.uGYuRaDWy9yJe.t23Ixl1KDBc16x6o2', '王收银', '13900000002', '女', 3, 1, 1, 0, 1, 1),
+('chef', '$2a$10$8txnIXzhYL4Pr/X7E1H/2.uGYuRaDWy9yJe.t23Ixl1KDBc16x6o2', '李大厨', '13900000003', '男', 4, 1, 1, 0, 1, 1);
 
 -- 插入数据字典数据
 -- 订单状态
@@ -395,6 +405,74 @@ INSERT INTO `dict` (`dict_type`, `dict_code`, `dict_label`, `dict_desc`, `sort`,
 ('common_status', 0, '禁用', '通用状态：禁用', 2, 1);
 
 -- ============================================
--- 脚本执行完成
+-- 业务数据 (分类 -> 菜品 -> 套餐 -> 订单)
 -- ============================================
 
+-- 分类数据
+INSERT INTO `category` (`id`, `name`, `type`, `sort`, `status`, `branch_id`, `create_user`, `update_user`) VALUES
+(10, '湘菜', 1, 1, 1, 1, 1, 1),
+(11, '川菜', 1, 2, 1, 1, 1, 1),
+(12, '饮品', 1, 3, 1, 1, 1, 1),
+(13, '主食', 1, 4, 1, 1, 1, 1),
+(14, '超值套餐', 2, 1, 1, 1, 1, 1);
+
+-- 菜品数据
+-- 辣椒炒肉 (湘菜)
+INSERT INTO `dish` (`id`, `name`, `category_id`, `price`, `specifications`, `image`, `description`, `status`, `branch_id`, `create_user`, `update_user`) VALUES
+(100, '辣椒炒肉', 10, 28.00, '[{"name":"辣度","values":["微辣","中辣","特辣"]}]', 'https://example.com/dish1.jpg', '地道湘菜，鲜辣下饭', 1, 1, 1, 1);
+-- 剁椒鱼头 (湘菜)
+INSERT INTO `dish` (`id`, `name`, `category_id`, `price`, `specifications`, `image`, `description`, `status`, `branch_id`, `create_user`, `update_user`) VALUES
+(101, '剁椒鱼头', 10, 68.00, '[]', 'https://example.com/dish2.jpg', '鲜嫩鱼头，秘制剁椒', 1, 1, 1, 1);
+-- 宫保鸡丁 (川菜)
+INSERT INTO `dish` (`id`, `name`, `category_id`, `price`, `specifications`, `image`, `description`, `status`, `branch_id`, `create_user`, `update_user`) VALUES
+(102, '宫保鸡丁', 11, 32.00, '[]', 'https://example.com/dish3.jpg', '经典川菜，酸甜微辣', 1, 1, 1, 1);
+-- 可乐 (饮品)
+INSERT INTO `dish` (`id`, `name`, `category_id`, `price`, `specifications`, `image`, `description`, `status`, `branch_id`, `create_user`, `update_user`) VALUES
+(103, '可乐', 12, 3.00, '[]', 'https://example.com/drink1.jpg', '冰镇可乐', 1, 1, 1, 1);
+-- 米饭 (主食)
+INSERT INTO `dish` (`id`, `name`, `category_id`, `price`, `specifications`, `image`, `description`, `status`, `branch_id`, `create_user`, `update_user`) VALUES
+(104, '米饭', 13, 2.00, '[]', 'https://example.com/rice.jpg', '五常大米', 1, 1, 1, 1);
+
+-- 菜品口味数据
+INSERT INTO `dish_flavor` (`id`, `dish_id`, `name`, `value`) VALUES
+(1, 100, '辣度', '["微辣","中辣","特辣"]');
+
+-- 套餐数据
+-- 单人满足餐 (辣椒炒肉 + 米饭 + 可乐)
+INSERT INTO `setmeal` (`id`, `name`, `category_id`, `price`, `image`, `description`, `status`, `branch_id`, `create_user`, `update_user`) VALUES
+(200, '单人满足餐', 14, 30.00, 'https://example.com/set1.jpg', '一荤一素一饮品', 1, 1, 1, 1);
+
+-- 套餐菜品关系
+INSERT INTO `setmeal_dish` (`id`, `setmeal_id`, `dish_id`, `name`, `price`, `copies`, `sort`) VALUES
+(1, 200, 100, '辣椒炒肉', 28.00, 1, 1),
+(2, 200, 104, '米饭', 2.00, 1, 2),
+(3, 200, 103, '可乐', 3.00, 1, 3);
+
+-- 订单数据
+-- 订单1: 待付款
+INSERT INTO `orders` (`id`, `number`, `status`, `branch_id`, `consignee`, `phone`, `address`, `order_time`, `amount`, `pack_amount`, `tableware_number`, `update_user`) VALUES
+(1001, 'ORD202512120001', 1, 1, '张三', '13800000001', '科技园A栋301', NOW(), 35.00, 2.00, 2, 1);
+
+INSERT INTO `order_detail` (`order_id`, `name`, `dish_id`, `number`, `amount`, `total_amount`) VALUES
+(1001, '辣椒炒肉', 100, 1, 28.00, 28.00),
+(1001, '米饭', 104, 2, 2.00, 4.00),
+(1001, '打包费', NULL, 1, 2.00, 2.00);
+
+-- 订单2: 待接单
+INSERT INTO `orders` (`id`, `number`, `status`, `branch_id`, `consignee`, `phone`, `address`, `order_time`, `checkout_time`, `pay_method`, `pay_status`, `amount`, `pack_amount`, `update_user`) VALUES
+(1002, 'ORD202512120002', 2, 1, '李四', '13800000002', '幸福小区5-202', DATE_SUB(NOW(), INTERVAL 10 MINUTE), DATE_SUB(NOW(), INTERVAL 9 MINUTE), 1, 1, 30.00, 0.00, 1);
+
+INSERT INTO `order_detail` (`order_id`, `name`, `setmeal_id`, `number`, `amount`, `total_amount`) VALUES
+(1002, '单人满足餐', 200, 1, 30.00, 30.00);
+
+-- 订单3: 已完成
+INSERT INTO `orders` (`id`, `number`, `status`, `branch_id`, `consignee`, `phone`, `address`, `order_time`, `checkout_time`, `pay_method`, `pay_status`, `amount`, `pack_amount`, `delivery_time`, `update_user`) VALUES
+(1003, 'ORD202512120003', 5, 1, '王五', '13800000003', '商务大厦B座1101', DATE_SUB(NOW(), INTERVAL 2 HOUR), DATE_SUB(NOW(), INTERVAL 115 MINUTE), 2, 1, 71.00, 0.00, DATE_SUB(NOW(), INTERVAL 1 HOUR), 1);
+
+INSERT INTO `order_detail` (`order_id`, `name`, `dish_id`, `number`, `amount`, `total_amount`) VALUES
+(1003, '剁椒鱼头', 101, 1, 68.00, 68.00),
+(1003, '可乐', 103, 1, 3.00, 3.00);
+
+-- ============================================
+-- 脚本执行完成
+-- ============================================
