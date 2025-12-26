@@ -287,12 +287,12 @@ logging:
 
 ## 联系方式
 
-- 项目地址：[https://github.com/yourusername/deliver-management](https://github.com/AnnZy1/Takeout-Management-System)
-- 问题反馈：[GitHub Issues](https://github.com/AnnZy1/Takeout-Management-System/issues)
+- 项目地址：[https://github.com/yourusername/deliver-management](https://github.com/yourusername/deliver-management)
+- 问题反馈：[GitHub Issues](https://github.com/yourusername/deliver-management/issues)
 
 ## 更新日志
 
-### v1.0.0 (2023-12-10)
+### v1.0.0 (2025-12-23)
 - 初始版本发布
 - 实现核心功能模块
 - 完成前后端集成
